@@ -29,6 +29,7 @@ export default function App() {
 					: checkSolved(word, tried, attempts) ? "game-text win-text"
 					: "game-text"}>{processWord(word, tried, attempts)}</span>
 
+				{/* Keep track of already guessed letters */}
 				<span className="used-letter-text">Already guessed: [{tried.join(', ')}]</span>
 
 				<span>
@@ -37,7 +38,7 @@ export default function App() {
 						// Validate that the game is running and each guess is valid
 						let check = validateGuess(guess, word, attempts, tried);
 						if (check === true) {
-							// When guess is correct
+							// Count incorrect guesses
 							if (!word.split('').includes(guess)) {
 								setAttempts(attempts + 1);
 							}
@@ -61,7 +62,7 @@ export default function App() {
 					setTried([]);
 					setMessage("");
 					// Fetch a new word from the API
-					fetch('https://random-word-api.herokuapp.com/word?number=1')
+					fetch('https://random-word-api.herokuapp.com/word?number=1&swear=1')
 						.then(res => res.json())
 						.then(data => {
 							setWord(data[0].toLowerCase());
@@ -75,6 +76,7 @@ export default function App() {
 	);
 }
 
+// Check if the word has been fully guessed
 const checkSolved = (word, tried, attempts) => (processWord(word, tried, attempts).indexOf("_") === -1);
 
 // Load corresponding image per guess made
@@ -99,6 +101,7 @@ const chooseImage = (attempt) => {
 	}
 }
 
+// Handles revealing of letters
 const processWord = (word, tried, attempts) => {
 	if (attempts >= 6) {
 		// Game is over, reveal the word
@@ -112,6 +115,7 @@ const processWord = (word, tried, attempts) => {
 	}
 }
 
+// Prevents invalid guesses and guessing when the game hasn't started or was already lost
 const validateGuess = (guess, word, attempts, tried) => {
 	let msg = "";
 	// Don't allow guesses if the game is already over or if no word has been chosen
