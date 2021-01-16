@@ -109,9 +109,7 @@ const processWord = (word, tried, attempts) => {
 	}
 	else {
 		// Game still going, replace all unguessed letters with underscores
-		let puzzle = word.split('').map(letter => (tried.includes(letter) ? letter : '_')).join('');
-		// Return current revealed letters and status of if the word is solved
-		return puzzle;
+		return word.split('').map(letter => (tried.includes(letter) ? letter : '_')).join('');
 	}
 }
 
